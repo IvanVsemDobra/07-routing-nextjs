@@ -6,7 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchNotes, type NotesHttpResponse } from "@/lib/api";
 import { useDebounce } from "@/components/hooks/UseDebounce";
 
-import SearchBar from "@/components/SearchBox/SearchBox";
+
 import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
 import SearchBox from "@/components/SearchBox/SearchBox";
@@ -51,30 +51,30 @@ export default function NotesClient() {
   };
 
   const handleCreated = () => {
-    closeModal();
-    queryClient.invalidateQueries({ queryKey: ["notes"] });
-  };
-  <SearchBar onChange={handleChange} />;
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  closeModal();
+  queryClient.invalidateQueries({ queryKey: ["notes"] });
+};
+
+const openModal = () => setIsModalOpen(true);
+const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox onChange={handleChange} />
+  <SearchBox onSearch={handleChange} searchQuery={searchNote} />
 
-        {isSuccess && !isError && data?.totalPages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={data?.totalPages || 1}
-            onPageChange={({ selected }) => setCurrentPage(selected + 1)}
-          />
-        )}
+  {isSuccess && !isError && data?.totalPages > 1 && (
+    <Pagination
+      currentPage={currentPage}
+      totalPages={data?.totalPages || 1}
+      onPageChange={({ selected }) => setCurrentPage(selected + 1)}
+    />
+  )}
 
-        <button onClick={openModal} className={css.button}>
-          Create note +
-        </button>
-      </header>
+  <button onClick={openModal} className={css.button}>
+    Create note +
+  </button>
+</header>
 
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}

@@ -3,6 +3,15 @@
   --foreground: #171717;
 }
 
+
+
+main {
+  
+  flex: 1;
+ margin: 16px;
+ 
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -22,6 +31,8 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
 }
 
 * {
