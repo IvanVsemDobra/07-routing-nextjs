@@ -8,7 +8,15 @@ export interface NotesHttpResponse {
   totalPages: number;
 }
 
-// Допоміжна функція для створення axios з токеном
+// Інтерфейс для параметрів запиту нотаток
+interface FetchNotesParams {
+  page: number;
+  perPage: number;
+  search?: string;
+  tag?: string;
+}
+
+// Допоміжна функція для створення axios-інстансу з токеном
 const getApiInstance = () => {
   const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
   if (!token) throw new Error("NEXT_PUBLIC_NOTEHUB_TOKEN is missing!");
@@ -22,20 +30,20 @@ const getApiInstance = () => {
   });
 };
 
-// Отримати всі нотатки (з пагінацією та пошуком)
-export const fetchNotes = async ({
-  page,
-  perPage,
-  search,
-}: {
-  page: number;
-  perPage: number;
-  search?: string;
-}): Promise<NotesHttpResponse> => {
+//  Отримати всі нотатки
+export const fetchNotes = async (params: FetchNotesParams): Promise<NotesHttpResponse> => {
   const api = getApiInstance();
-  const res = await api.get<NotesHttpResponse>("/notes", {
-    params: { page, perPage, search },
-  });
+
+  // Створюємо об’єкт параметрів із чіткими типами
+  const queryParams: Record<string, string | number> = {
+    page: params.page,
+    perPage: params.perPage,
+  };
+
+  if (params.search) queryParams.search = params.search;
+  if (params.tag && params.tag !== "all") queryParams.tag = params.tag;
+
+  const res = await api.get<NotesHttpResponse>("/notes", { params: queryParams });
   return res.data;
 };
 
@@ -46,21 +54,21 @@ export const fetchNoteById = async (id: string): Promise<Note> => {
   return res.data;
 };
 
-// Створити нову нотатку
+//  Створити нову нотатку
 export const createNote = async (newNote: NewNote): Promise<Note> => {
   const api = getApiInstance();
   const res = await api.post<Note>("/notes", newNote);
   return res.data;
 };
 
-// Видалити нотатку за ID
+//  Видалити нотатку за ID
 export const deleteNote = async (id: string): Promise<Note> => {
   const api = getApiInstance();
   const res = await api.delete<Note>(`/notes/${id}`);
   return res.data;
 };
 
-//Отримати категорії
+//  Отримати категорії
 export const getCategories = async (): Promise<CategoryType[]> => {
   const api = getApiInstance();
   const res = await api.get<CategoryType[]>("/categories");

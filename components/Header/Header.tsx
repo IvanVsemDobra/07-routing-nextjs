@@ -1,7 +1,6 @@
 import Link from "next/link";
 import css from "./Header.module.css";
 
-
 export default function Header() {
   return (
     <header className={css.header}>
@@ -17,7 +16,7 @@ export default function Header() {
             <Link href="/notes">Note</Link>
           </li>
           <li>
-            <Link href="/notes/filter/ALL_NOTES">Notes</Link>
+            <Link href="/notes/filter/all">Notes</Link>
           </li>
         </ul>
       </nav>
