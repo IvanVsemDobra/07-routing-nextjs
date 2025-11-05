@@ -6,9 +6,10 @@ import { fetchNotes } from "@/lib/api";
 
 
 import  SearchBox from "@/components/SearchBox/SearchBox";
-import css from "./NotesPage.module.css";
+import css from "./page.module.css";
 import Pagination from "@/components/Pagination/Pagination";
 import { useDebounce } from "@/components/hooks/UseDebounce";
+
 
 interface NotesClientProps {
   category: string;
