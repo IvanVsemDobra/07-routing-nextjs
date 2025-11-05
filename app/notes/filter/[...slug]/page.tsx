@@ -16,13 +16,14 @@ export default async function NotePage({ params }: NotePageProps) {
 
   const category = slug[0] === "all" ? undefined : slug[0];
 
+  
   await queryClient.prefetchQuery({
-    queryKey: ["notes", { search: "", tag: category, page: 1 }],
+    queryKey: ["notes", { search: category ?? "", tag: category, page: 1 }],
     queryFn: () =>
       fetchNotes({
         page: 1,
         perPage: 12,
-        search: category, 
+        search: category ?? "",
       }),
   });
 
