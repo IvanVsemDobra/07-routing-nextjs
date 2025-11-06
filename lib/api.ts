@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Note, NewNote, CategoryType } from "@/types/note";
+import type { Note, NewNote, CategoryType } from "@/lib/types/note";
 
 const BASE_URL = "https://notehub-public.goit.study/api";
 
@@ -73,4 +73,17 @@ export const getCategories = async (): Promise<CategoryType[]> => {
   const api = getApiInstance();
   const res = await api.get<CategoryType[]>("/categories");
   return res.data;
+};
+
+export interface NewNoteData {
+  title: string;
+  content: string;
+}
+
+export const editNote = async (
+  id: string,
+  newNotedata: NewNoteData
+): Promise<Note> => {
+  const { data } = await axios.patch<Note>(`/notes/${id}`, newNotedata);
+  return data;
 };

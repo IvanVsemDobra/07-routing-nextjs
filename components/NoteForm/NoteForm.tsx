@@ -1,6 +1,6 @@
 import { createNote } from "@/lib/api";
 import css from "./NoteForm.module.css";
-import type { NewNote, Note } from "@/types/note";
+import type { NewNote, Note } from "@/lib/types/note";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
