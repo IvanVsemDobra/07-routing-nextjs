@@ -1,33 +1,44 @@
-'use client';
+"use client";
+import Modal from "@/components/Modal/Modal";
+import css from "./NoteDetails.module.css";
+import { useParams, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNoteById } from "@/lib/api";
+import Loading from "@/app/loading";
 
-import Modal from '@/components/Modal/Modal';
-import css from './NotePreview.module.css';
-import { useEffect } from 'react';
-
-export default function NotePreviewClient() {
-  useEffect(() => {
-    const fn = async () => {};
-    fn();
-  }, []);
-
-  const handleClose = () => {
-    console.log('Modal closed');
-    
+export default function NotePreview() {
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const closeModal = () => {
+    router.back();
   };
 
-  return (
-    <Modal onClose={handleClose}>
-      <button onClick={handleClose} className={css.backBtn}>← Back</button>
-      <div className={css.post}>
-        <div className={css.wrapper}>
-          <div className={css.header}>
-            <h2>Note title</h2>
-          </div>
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["note", id],
+    queryFn: () => fetchNoteById(id),
+    refetchOnMount: false,
+  });
 
-          <p className={css.content}>Note body</p>
-        </div>
-        <p className={css.user}>Note name</p>
-      </div>
-    </Modal>
-  );
+  return (
+    <>
+      <Modal onClose={closeModal}>
+        {isLoading && <Loading />}
+        {isError && <p> Could not fetch note details.</p>}
+        {data && (
+          <div className={css.container}>
+            <div className={css.item}>
+              <div className={css.header}>
+                <h2>{data?.title}</h2>
+              </div>
+              <p className={css.content}>{data?.content}</p>
+              <p className={css.date}>{data?.createdAt}</p>
+            </div>
+            <span className={css.tag}>{data?.tag}</span>
+          </div>
+        )}
+        <button onClick={closeModal} className={css.backBtn}>
+          Close
+        </button>
+      </Modal>
+    </>);
 }

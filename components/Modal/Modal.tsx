@@ -1,44 +1,40 @@
-"use client";
-
-import { ReactNode, useEffect } from "react";
-import { createPortal } from "react-dom";
+"use client"
+import { useEffect } from "react";
 import css from "./Modal.module.css";
-
-export interface ModalProps {
+import { createPortal } from "react-dom";
+interface ModalProps {
   onClose: () => void;
-  children: ReactNode;
+  children: React.ReactNode;
 }
-
-const Modal = ({ onClose, children }: ModalProps) => {
-  // Закриття модалки при натисканні Escape
+export default function Modal({ onClose, children }: ModalProps) {
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
   useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
         onClose();
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [onClose]);
-
-  // Вимикаємо прокрутку сторінки, коли модалка відкрита
-  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "auto";
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
     };
-  }, []);
-
-  //  Використання React Portal для рендеру модалки поверх усього DOM
+  }, [onClose]);
   return createPortal(
-    <div className={css.backdrop} onClick={onClose}>
-      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
-        {children}
-      </div>
+    <div
+      className={css.backdrop}
+      role="dialog"
+      aria-modal="true"
+      onClick={handleBackdropClick}
+    >
+      <div className={css.modal}>{children}</div>
     </div>,
     document.body
   );
-};
-
-export default Modal;
+}
