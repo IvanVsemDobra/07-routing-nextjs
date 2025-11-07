@@ -1,16 +1,17 @@
 
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { Tag } from "@/lib/types/note";
+import { Tag } from "@/types/note";
 import NotesClient from "./Notes.client";
 import { fetchNotes } from "@/lib/api";
 
 export default async function NotesPage({
   params,
 }: {
-  params: { slug?: string[] };
+  params: Promise<{ slug?: string | string[] }>;
 }) {
   // Гарантуємо, що slug завжди масив
-  const slugArray = Array.isArray(params.slug) ? params.slug : ["all"];
+  const slug  = await params;
+  const slugArray = Array.isArray(slug) ? slug : ["all"];
 
   // Безпечне отримання тегу
   const tag: Tag | string = slugArray[0] === "all" ? "" : slugArray[0];
