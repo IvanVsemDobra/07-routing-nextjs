@@ -7,7 +7,7 @@ import { fetchNotes } from "@/lib/api";
 export default async function NotesPage({
   params,
 }: {
-  params: Promise<{ slug?: string | string[] }>;
+  params: Promise<{ slug: string[] }>;
 }) {
   // Гарантуємо, що slug завжди масив
   const slug  = await params;

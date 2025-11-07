@@ -1,6 +1,6 @@
 "use client";
+import { useEffect, useState } from "react";
 
-import { useState } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
 import SearchBox from "@/components/SearchBox/SearchBox";
@@ -25,7 +25,10 @@ export default function NotesClient({ category }: NotesClientProps) {
   
   const debouncedSearch = useDebounce(topic, 500);
 
-  
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, category]);
+
   const { data, isLoading, isError, isSuccess, error } = useQuery({
     queryKey: ["notes", { search: debouncedSearch, category, page }],
     queryFn: () =>
