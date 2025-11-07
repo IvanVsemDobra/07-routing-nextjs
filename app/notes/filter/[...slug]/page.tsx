@@ -10,8 +10,8 @@ export default async function NotesPage({
   params: Promise<{ slug: string[] }>;
 }) {
   // Гарантуємо, що slug завжди масив
-  const slug  = await params;
-  const slugArray = Array.isArray(slug) ? slug : ["all"];
+  const {slug}  = await params;
+  const slugArray: string[] = Array.isArray(slug) ? slug : slug ? [slug] : ["all"];
 
   // Безпечне отримання тегу
   const tag: Tag | string = slugArray[0] === "all" ? "" : slugArray[0];
@@ -21,7 +21,7 @@ export default async function NotesPage({
 
   // Попереднє завантаження нотаток
   await queryClient.prefetchQuery({
-    queryKey: ["notes", { searchQuery: "", currentPage: 1, tag }],
+   queryKey: ["notes", { search: "", category: tag, page: 1 }],
     queryFn: () => fetchNotes({ page: 1, perPage: 12, tag }),
   });
 
