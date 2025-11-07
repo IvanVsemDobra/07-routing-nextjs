@@ -44,26 +44,23 @@ export default function NotesClient({ category }: NotesClientProps) {
 
   return (
     <div className={css.app}>
-      <header className={css.toolbar}>
+
         
         <SearchBox onSearch={setTopic} searchQuery={topic} />
 
       
         {isSuccess && data?.totalPages > 1 && (
-          <Pagination
-            totalPages={data.totalPages}
-            currentPage={page}
-            onPageChange={({ selected }: { selected: number }) =>
-              setPage(selected + 1)
-            }
-          />
-        )}
+  <Pagination
+    totalPages={data.totalPages}
+    currentPage={page}
+    onPageChange={(selectedPage) => setPage(selectedPage)} 
+  />
+)}
 
         
         <button className={css.button} onClick={openModal}>
           Create note +
         </button>
-      </header>
 
       
       {isLoading && <Loading />}
